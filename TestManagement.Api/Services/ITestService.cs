@@ -13,4 +13,6 @@ public interface ITestService
     Task<bool> UpdateAsync(Guid id, CreateTestDto dto);
 
     Task<bool> DeleteAsync(Guid id);
+
+    Task<TestResultDto?> SubmitAsync(Guid testId, SubmitTestDto dto);
 }
