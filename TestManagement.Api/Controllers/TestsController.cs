@@ -81,4 +81,22 @@ public class TestsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("{id:guid}/submit")]
+    public async Task<ActionResult<TestResultDto>> Submit(Guid id, [FromBody] SubmitTestDto dto)
+    {
+        try
+        {
+            var result = await _testService.SubmitAsync(id, dto);
+
+            if (result is null)
+                return NotFound();
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 }

@@ -68,3 +68,24 @@ public class CreateAnswerOptionDto
 
     public bool IsCorrect { get; set; }
 }
+
+public class SubmitTestDto
+{
+    public List<SubmitAnswerDto> Answers { get; set; } = new();
+}
+
+public class SubmitAnswerDto
+{
+    public Guid QuestionId { get; set; }
+
+    public List<Guid> SelectedAnswerOptionIds { get; set; } = new();
+}
+
+public class TestResultDto
+{
+    public double Score { get; set; }
+
+    public int MaxScore { get; set; }
+
+    public double Percentage { get; set; }
+}
