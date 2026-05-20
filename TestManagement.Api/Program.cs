@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.Api.Data;
+using TestManagement.Api.Repositories;
+using TestManagement.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<ITestService, TestService>();
 
 builder.Services.AddCors(options =>
 {
