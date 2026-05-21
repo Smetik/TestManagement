@@ -10,7 +10,7 @@ public interface ITestRepository
 
     Task AddAsync(Test test);
 
-    Task UpdateAsync(Test test);
+    Task ReplaceQuestionsAsync(Test test, List<Question> questions);
 
     Task DeleteAsync(Test test);
 }

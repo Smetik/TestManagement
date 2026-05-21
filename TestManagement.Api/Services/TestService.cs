@@ -76,26 +76,21 @@ public class TestService : ITestService
         existingTest.Title = dto.Title.Trim();
         existingTest.Description = dto.Description;
 
-        existingTest.Questions.Clear();
-
-        foreach (var questionDto in dto.Questions)
+        var questions = dto.Questions.Select(questionDto => new Question
         {
-            existingTest.Questions.Add(new Question
+            Id = Guid.NewGuid(),
+            TestId = existingTest.Id,
+            Text = questionDto.Text.Trim(),
+            Type = questionDto.Type,
+            AnswerOptions = questionDto.AnswerOptions.Select(answerDto => new AnswerOption
             {
                 Id = Guid.NewGuid(),
-                TestId = existingTest.Id,
-                Text = questionDto.Text.Trim(),
-                Type = questionDto.Type,
-                AnswerOptions = questionDto.AnswerOptions.Select(answerDto => new AnswerOption
-                {
-                    Id = Guid.NewGuid(),
-                    Text = answerDto.Text.Trim(),
-                    IsCorrect = answerDto.IsCorrect
-                }).ToList()
-            });
-        }
+                Text = answerDto.Text.Trim(),
+                IsCorrect = answerDto.IsCorrect
+            }).ToList()
+        }).ToList();
 
-        await _repository.UpdateAsync(existingTest);
+        await _repository.ReplaceQuestionsAsync(existingTest, questions);
 
         return true;
     }
