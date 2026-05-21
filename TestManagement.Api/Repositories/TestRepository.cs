@@ -35,9 +35,29 @@ public class TestRepository : ITestRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Test test)
+    public async Task ReplaceQuestionsAsync(Test test, List<Question> questions)
     {
-        _context.Tests.Update(test);
+        var oldQuestions = test.Questions.ToList();
+        var oldAnswerOptions = oldQuestions
+            .SelectMany(question => question.AnswerOptions)
+            .ToList();
+
+        _context.AnswerOptions.RemoveRange(oldAnswerOptions);
+        _context.Questions.RemoveRange(oldQuestions);
+
+        test.Questions.Clear();
+
+        foreach (var question in questions)
+        {
+            question.TestId = test.Id;
+
+            foreach (var answerOption in question.AnswerOptions)
+            {
+                answerOption.QuestionId = question.Id;
+            }
+        }
+
+        await _context.Questions.AddRangeAsync(questions);
         await _context.SaveChangesAsync();
     }
 
